@@ -1,22 +1,28 @@
-# Discourse Course Progress Plugin
+# Discourse Course Progress — Criptonautas Fork
 
-A lightweight, server-side Discourse plugin designed to support LMS-style "course" progression. It exposes a single, highly-optimized API endpoint that returns the true historical read status of topics for the current user.
+Server-side Discourse plugin that returns the **true historical read status** of topics per user, for LMS-style course progression. Fork of [zsviczian/discourse-course-progress](https://github.com/zsviczian/discourse-course-progress) (MIT).
 
-🎨 **Looking for the UI?** To actually display the progress badges and checkmarks in your Discourse sidebar, you must also install the official companion Theme Component: **[Discourse Course Progress Theme Component](https://github.com/zsviczian/discourse-course-progress-theme)**
+## What this fork adds
 
-## Why is this needed?
-By default, the standard Discourse notification engine relies on a time-decay algorithm to prevent notification fatigue. It actively hides or ignores topics created *before* a user's account was created, making standard client-side scripts unable to track historical reading progress for new members.
+**Previous / Next topic navigation** for Doc Categories:
 
-This plugin bypasses the notification engine entirely. It queries the `TopicUser` database directly to find exactly which topics a user has historically opened, providing bulletproof data for custom UI theme components.
+- Renders **Previous / Next** links at the bottom of a topic (above the suggested topics), following the exact order of the category's configured Docs **Index Topic**.
+- Reads the ordered index the official **Doc Categories** plugin already serializes on the category (`doc_category_index`) — no extra API calls.
+- Auto-hidden on topics outside the index (e.g. the Index Topic itself) and for anonymous users.
+- Glimmer component rendered in the `topic-above-suggested` outlet; styles scoped under `.course-doc-nav`, overridable from any theme.
+
+## Why it exists
+
+Discourse's notification engine hides topics created before a user's account, so client-side scripts cannot track historical reading progress. This plugin queries the `TopicUser` table directly, bypassing that engine.
 
 ## Dependencies
-This plugin relies on the official **Discourse Docs** plugin. It automatically tracks progress for any category that has an "Index Topic" configured in its Docs settings.
+
+- Official **Discourse Docs** plugin, with an **Index Topic** configured on the category (Docs settings).
 
 ## Installation
 
-1. SSH into your Discourse server.
-2. Edit your `app.yml` file (e.g., `nano /var/discourse/containers/app.yml`).
-3. Add the clone URL for this repository to the `hooks` section, placing it below `docker_manager`:
+1. SSH into your Discourse server and edit `app.yml`.
+2. Add the clone URL under `hooks`, below `docker_manager`:
 
 ```yaml
 hooks:
@@ -25,26 +31,18 @@ hooks:
         cd: $home/plugins
         cmd:
           - git clone https://github.com/discourse/docker_manager.git
-          - git clone https://github.com/zsviczian/discourse-course-progress.git
+          - git clone https://github.com/somos-criptonautas/discourse-course-progress-nautas.git
 ```
 
-4. Rebuild the container:
+3. Rebuild: `cd /var/discourse && ./launcher rebuild app`
 
-```bash
-cd /var/discourse
-./launcher rebuild app
-```
+## Progress UI
 
-## Next Steps: Install the UI
-Once your server finishes rebuilding, this plugin will quietly serve the progression data in the background. To make it visible to your users, install the **[Discourse Course Progress Theme Component](https://github.com/zsviczian/discourse-course-progress-theme)** via your Discourse Admin interface (`Admin > Customize > Themes > Install > From a Git Repository`).
+This plugin only serves data. To display badges/checkmarks, also install the companion theme component: [discourse-course-progress-theme](https://github.com/zsviczian/discourse-course-progress-theme).
 
----
+## API
 
-## For Developers: API Endpoint
-The plugin exposes one endpoint: `GET /course-progress.json`.
-*(Note: The user must be logged in to access this endpoint, as guests do not have read histories).*
-
-**Response Example:**
+`GET /course-progress.json` — logged-in users only (guests have no read history).
 
 ```json
 {
@@ -53,11 +51,6 @@ The plugin exposes one endpoint: `GET /course-progress.json`.
       "total_topics": 69,
       "read_count": 66,
       "read_topic_ids": [502, 503, 504]
-    },
-    "33": {
-      "total_topics": 18,
-      "read_count": 2,
-      "read_topic_ids": [381, 382]
     }
   }
 }
