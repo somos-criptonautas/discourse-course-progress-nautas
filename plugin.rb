@@ -5,6 +5,8 @@
 
 enabled_site_setting :course_progress_enabled
 
+register_asset "stylesheets/common.scss"
+
 after_initialize do
   # Load the controller
   load File.expand_path('../app/controllers/course_progress_controller.rb', __FILE__)

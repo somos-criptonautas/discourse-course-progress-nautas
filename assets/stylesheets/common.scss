@@ -1,0 +1,46 @@
+// Previous / next topic navigation for Doc Categories, rendered by
+// discourse-course-progress in the "topic-above-suggested" outlet.
+.course-doc-nav {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1em;
+  margin: 2em 0 1em;
+  padding-top: 0.75em;
+  border-top: 1px solid var(--primary-low);
+
+  &__link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15em;
+    min-width: 0;
+    max-width: 50%;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      .course-doc-nav__title {
+        color: var(--tertiary);
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__label {
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__title {
+    color: var(--primary-high);
+    font-weight: bold;
+    overflow-wrap: anywhere;
+  }
+
+  &__link--next {
+    margin-left: auto;
+    text-align: right;
+  }
+}
