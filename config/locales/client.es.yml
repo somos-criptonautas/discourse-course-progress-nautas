@@ -1,0 +1,7 @@
+es:
+  js:
+    course_progress:
+      doc_nav:
+        label: "Navegación del curso"
+        previous: "Anterior"
+        next: "Siguiente"
