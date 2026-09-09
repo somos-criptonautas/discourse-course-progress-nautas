@@ -10,7 +10,10 @@ enabled_site_setting :course_progress_enabled
 register_asset "stylesheets/common.scss"
 
 after_initialize do
-  # The controller in app/controllers is autoloaded by Discourse.
+  # Plugins without a Rails::Engine get no autoload path for app/, so the
+  # controller has to be loaded explicitly.
+  load File.expand_path("../app/controllers/course_progress_controller.rb", __FILE__)
+
   Discourse::Application.routes.append do
     get "/course-progress" => "course_progress#index", :constraints => { format: "json" }
   end
