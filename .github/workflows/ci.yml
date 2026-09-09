@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: JS unit tests
+        run: node test/topic-href.test.mjs
+
+      - name: Ruby syntax check
+        run: for f in plugin.rb app/controllers/*.rb; do ruby -c "$f"; done
+
+      - name: YAML syntax check
+        run: ruby -ryaml -e 'Dir["config/**/*.yml"].each { |f| YAML.load_file(f); puts "ok #{f}" }'
