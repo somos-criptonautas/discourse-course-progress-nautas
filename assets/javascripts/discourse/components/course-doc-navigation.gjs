@@ -58,14 +58,9 @@ export default class CourseDocNavigation extends Component {
     }
 
     return this.links.findIndex((link) => {
-      const href = link?.href;
-
-      // Skip external links; internal topic links are root-relative.
-      if (!href || !href.startsWith("/t/")) {
-        return false;
-      }
-
-      const match = href.match(INTERNAL_TOPIC_HREF);
+      // The regex only matches root-relative "/t/..." URLs, so external
+      // links simply fall through to no-match.
+      const match = link?.href?.match(INTERNAL_TOPIC_HREF);
 
       return match ? Number(match[1]) === topic.id : false;
     });

@@ -7,8 +7,12 @@ class CourseProgressController < ::ApplicationController
       return render json: { courses: {} }
     end
 
-    # 1. Query the Docs table for category IDs configured as courses
+    # 1. Query the Docs table for the categories configured as courses, plus
+    #    each course's Index Topic. The index is navigation, not course
+    #    content, so it is excluded from the progress totals below.
+    #    NB: DB.query_single flattens results, so keep one column per call.
     course_category_ids = DB.query_single("SELECT category_id FROM doc_categories_indexes").uniq
+    index_topic_ids = DB.query_single("SELECT index_topic_id FROM doc_categories_indexes").to_set
 
     # Fail gracefully if no courses are configured
     return render json: { courses: {} } if course_category_ids.empty?
@@ -34,6 +38,7 @@ class CourseProgressController < ::ApplicationController
     # Tally up the totals and the read states
     topic_data.each do |topic_id, cat_id|
       next unless results[cat_id]
+      next if index_topic_ids.include?(topic_id)
 
       results[cat_id][:total_topics] += 1
 

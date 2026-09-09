@@ -8,7 +8,7 @@ Server-side Discourse plugin that returns the **true historical read status** of
 
 - Renders **Previous / Next** links at the bottom of a topic (above the suggested topics), following the exact order of the category's configured Docs **Index Topic**.
 - Reads the ordered index the official **Doc Categories** plugin already serializes on the category (`doc_category_index`) — no extra API calls.
-- Auto-hidden on topics outside the index (e.g. the Index Topic itself) and for anonymous users.
+- Auto-hidden on topics outside the index (e.g. the Index Topic itself).
 - Glimmer component rendered in the `topic-above-suggested` outlet; styles scoped under `.course-doc-nav`, overridable from any theme.
 
 ## Why it exists
@@ -55,3 +55,19 @@ This plugin only serves data. To display badges/checkmarks, also install the com
   }
 }
 ```
+
+The Index Topic itself is **excluded** from `total_topics` — it is course
+navigation, not course content. A course of 10 lessons reports `total_topics: 10`.
+
+## Troubleshooting
+
+**Previous / Next links don't show up.** The Doc Categories plugin only exposes
+the ordered index (`doc_category_index`) once its sidebar structure has been
+built, which happens in a background job when the Index Topic is **edited or
+re-assigned**. On a course that was configured before that mechanism existed,
+just re-save the Index Topic (edit it and Save, or re-pick it in the category's
+Docs settings).
+
+**A lesson is missing from the Previous / Next list.** Give its link in the
+Index Topic an explicit title — a link carrying only a topic id is skipped by
+the Doc Categories parser.
