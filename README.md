@@ -16,7 +16,18 @@ Server-side Discourse plugin that returns the **true historical read status** of
 **Docs sidebar scoping.** Doc Categories resolves a category's index by walking
 up the category tree, so every subcategory of a docs category inherits its
 sidebar. This fork stops that walk: the sidebar appears only in the category
-that actually has an Index Topic configured. Turn it off with the
+that actually has an Index Topic configured.
+
+It works by overriding the sidebar service's `activeCategory` getter — the
+private `#findIndexForActiveCategory` method that does the walking cannot be
+patched, but the getter it reads can, so returning nothing for a category
+without its own `doc_category_index` ends the walk before it starts.
+
+Scope to be aware of: this hides the docs sidebar on subcategory listing pages
+**and on topics inside those subcategories**. If some of your lessons live in
+subcategories, those lesson pages lose the sidebar too — Previous / Next still
+works there, since it keys off the Index Topic rather than the category tree.
+Turn the whole behaviour off with the
 `course_progress_docs_sidebar_only_on_index_category` site setting.
 
 ## Why it exists
