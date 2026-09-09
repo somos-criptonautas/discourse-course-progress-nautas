@@ -13,6 +13,12 @@ Server-side Discourse plugin that returns the **true historical read status** of
 - Auto-hidden on topics outside the index (e.g. the Index Topic itself).
 - Glimmer component rendered in the `topic-above-footer-buttons` outlet; styles scoped under `.course-doc-nav`, overridable from any theme.
 
+**Docs sidebar scoping.** Doc Categories resolves a category's index by walking
+up the category tree, so every subcategory of a docs category inherits its
+sidebar. This fork stops that walk: the sidebar appears only in the category
+that actually has an Index Topic configured. Turn it off with the
+`course_progress_docs_sidebar_only_on_index_category` site setting.
+
 ## Why it exists
 
 Discourse's notification engine hides topics created before a user's account, so client-side scripts cannot track historical reading progress. This plugin queries the `TopicUser` table directly, bypassing that engine.

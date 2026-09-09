@@ -1,3 +1,4 @@
 en:
   site_settings:
     course_progress_enabled: "Expose /course-progress.json and show Previous/Next navigation on Doc Categories topics."
+    course_progress_docs_sidebar_only_on_index_category: "Show the Doc Categories sidebar only in the category that has an Index Topic configured, not in its subcategories."
