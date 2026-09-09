@@ -1,36 +1,49 @@
 // Previous / next topic navigation for Doc Categories, rendered by
-// discourse-course-progress in the "topic-above-footer-buttons" outlet.
+// discourse-course-progress in the "topic-area-bottom" outlet.
+//
+// Styled as a pair of cards so it reads as course navigation rather than as
+// part of the plain link list in the suggested-topics block below it.
 .course-doc-nav {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: stretch;
   gap: 1em;
-  margin: 2em 0 1em;
-  padding-top: 0.75em;
-  border-top: 1px solid var(--primary-low);
+  margin: 1.5em 0 0.5em;
 
   &__link {
     display: flex;
+    flex: 1 1 0;
     flex-direction: column;
-    gap: 0.15em;
+    gap: 0.25em;
     min-width: 0;
     max-width: 50%;
+    padding: 0.75em 1em;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius, 0.25em);
+    background: var(--secondary);
     text-decoration: none;
 
     &:hover,
     &:focus-visible {
+      border-color: var(--tertiary);
+
       .course-doc-nav__title {
         color: var(--tertiary);
-        text-decoration: underline;
       }
     }
   }
 
   &__label {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
     color: var(--primary-medium);
     font-size: var(--font-down-2);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+
+    .d-icon {
+      font-size: var(--font-down-1);
+    }
   }
 
   &__title {
@@ -41,6 +54,7 @@
 
   &__link--next {
     margin-left: auto;
+    align-items: flex-end;
     text-align: right;
   }
 }

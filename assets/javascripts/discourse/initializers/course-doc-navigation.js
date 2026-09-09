@@ -7,12 +7,15 @@ export default {
   initialize(container) {
     const siteSettings = container.lookup("service:site-settings");
 
-    if (!siteSettings?.course_progress_enabled) {
+    if (
+      !siteSettings?.course_progress_enabled ||
+      !siteSettings?.course_progress_doc_navigation_enabled
+    ) {
       return;
     }
 
     withPluginApi((api) => {
-      api.renderInOutlet("topic-above-footer-buttons", CourseDocNavigation);
+      api.renderInOutlet("topic-area-bottom", CourseDocNavigation);
     });
   },
 };

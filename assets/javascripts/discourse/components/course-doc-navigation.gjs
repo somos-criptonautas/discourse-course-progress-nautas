@@ -1,15 +1,16 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { topicIdFromHref } from "../lib/topic-href";
 
 /**
  * Previous / next topic navigation for Doc Categories.
  *
- * Renders in the `topic-above-footer-buttons` outlet (right below the last
- * post, above the topic's reply/bookmark/share buttons) and follows the exact
- * order of the category's configured docs Index Topic.
+ * Renders in the `topic-area-bottom` outlet, at the end of the post stream and
+ * before the topic's footer buttons, following the exact order of the
+ * category's configured docs Index Topic.
  *
  * The ordered structure is provided by the official discourse-doc-categories
  * plugin through the category serializer (`doc_category_index`), so no
@@ -90,6 +91,7 @@ export default class CourseDocNavigation extends Component {
             href={{this.previousTopic.href}}
           >
             <span class="course-doc-nav__label">
+              {{icon "arrow-left"}}
               {{i18n "course_progress.doc_nav.previous"}}
             </span>
             <span class="course-doc-nav__title">
@@ -104,6 +106,7 @@ export default class CourseDocNavigation extends Component {
           >
             <span class="course-doc-nav__label">
               {{i18n "course_progress.doc_nav.next"}}
+              {{icon "arrow-right"}}
             </span>
             <span class="course-doc-nav__title">{{this.nextTopic.text}}</span>
           </a>

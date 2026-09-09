@@ -1,4 +1,5 @@
 es:
   site_settings:
-    course_progress_enabled: "Expone /course-progress.json y muestra la navegación Anterior/Siguiente en los temas de Doc Categories."
+    course_progress_enabled: "Interruptor principal: expone /course-progress.json y activa las funciones de Doc Categories de este plugin."
+    course_progress_doc_navigation_enabled: "Muestra enlaces Anterior/Siguiente al final de los mensajes en los temas listados en un Tema Índice de Docs."
     course_progress_docs_sidebar_only_on_index_category: "Muestra la barra lateral de Doc Categories solo en la categoría que tiene un Tema Índice configurado, no en sus subcategorías."

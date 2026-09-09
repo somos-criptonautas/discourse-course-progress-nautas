@@ -6,12 +6,13 @@ Server-side Discourse plugin that returns the **true historical read status** of
 
 **Previous / Next topic navigation** for Doc Categories:
 
-- Renders **Previous / Next** links right after the last post, above the topic's reply/bookmark/share buttons, following the exact order of the category's configured Docs **Index Topic**.
+- Renders **Previous / Next** links at the end of the post stream (`topic-area-bottom`), styled as a pair of cards so they read as course navigation rather than as part of the suggested-topics list below.
 - Reads the ordered index the official **Doc Categories** plugin already serializes on the category (`doc_category_index`) — no extra API calls.
 - Scoped to the category that has the Index Topic. Its **subcategories are ordinary categories** — normal listing, no Previous / Next, no docs sidebar.
 - Matches both root-relative (`/t/slug/1`) and absolute (`https://host/t/slug/1`) links in the Index Topic.
 - Auto-hidden on topics outside the index (e.g. the Index Topic itself).
-- Glimmer component rendered in the `topic-above-footer-buttons` outlet; styles scoped under `.course-doc-nav`, overridable from any theme.
+- Labels are localised (`en`, `es`) and carry `arrow-left` / `arrow-right` icons, which the [Phosphor duotone](https://github.com/somos-criptonautas/discourse-phosphor-duotone-icons) component swaps for its own arrows automatically.
+- Glimmer component; styles scoped under `.course-doc-nav`, overridable from any theme.
 
 **Docs sidebar scoping.** Doc Categories resolves a category's index by walking
 up the category tree, so every subcategory of a docs category inherits its
@@ -27,6 +28,17 @@ This applies to subcategory listing pages and to topics inside them, which is
 the intended behaviour: a subcategory of a docs category is an ordinary
 category and should look like one. Turn it off with the
 `course_progress_docs_sidebar_only_on_index_category` site setting.
+
+## Site settings
+
+All of this fork's behaviour is switchable from **Admin → Settings → Plugins**
+(these are plugin settings, not theme component settings):
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| `course_progress_enabled` | on | Master switch for the endpoint and everything below. |
+| `course_progress_doc_navigation_enabled` | on | The Previous / Next links. |
+| `course_progress_docs_sidebar_only_on_index_category` | on | Stops subcategories inheriting the docs sidebar. |
 
 ## Why it exists
 
