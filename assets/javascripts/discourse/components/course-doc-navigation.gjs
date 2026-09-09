@@ -2,9 +2,7 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
-
-// Internal doc index links look like "/t/<slug>/<id>" or "/t/<id>".
-const INTERNAL_TOPIC_HREF = /^\/t\/(?:[^/]+\/)?(\d+)/;
+import { topicIdFromHref } from "../lib/topic-href";
 
 /**
  * Previous / next topic navigation for Doc Categories.
@@ -29,41 +27,54 @@ export default class CourseDocNavigation extends Component {
     return this.args.outletArgs?.model;
   }
 
-  get category() {
-    return (
+  // The index lives on the category that has it configured, but the topics it
+  // lists can sit in a subcategory (or, per doc-categories, in any other
+  // category the user can read). So walk up from the topic's own category the
+  // way doc-categories does, then fall back to every category we know about.
+  get candidateCategories() {
+    const start =
       this.topic?.category ??
-      this.site.categories?.find(
-        (category) => category.id === this.topic?.category_id
-      )
-    );
+      this.site.categories?.find((c) => c.id === this.topic?.category_id);
+
+    const chain = [];
+
+    for (let category = start; category; category = category.parentCategory) {
+      chain.push(category);
+    }
+
+    return chain.concat(this.site.categories ?? []);
   }
 
   @cached
   get links() {
-    const structure = this.category?.doc_category_index;
+    const topicId = this.topic?.id;
 
-    if (!Array.isArray(structure)) {
+    if (!topicId || this.topic.isPrivateMessage) {
       return [];
     }
 
-    return structure.flatMap((section) => section?.links ?? []);
+    for (const category of this.candidateCategories) {
+      const structure = category?.doc_category_index;
+
+      if (!Array.isArray(structure)) {
+        continue;
+      }
+
+      const links = structure.flatMap((section) => section?.links ?? []);
+
+      if (links.some((link) => topicIdFromHref(link?.href) === topicId)) {
+        return links;
+      }
+    }
+
+    return [];
   }
 
   @cached
   get currentIndex() {
-    const topic = this.topic;
-
-    if (!topic?.id || topic.isPrivateMessage) {
-      return -1;
-    }
-
-    return this.links.findIndex((link) => {
-      // The regex only matches root-relative "/t/..." URLs, so external
-      // links simply fall through to no-match.
-      const match = link?.href?.match(INTERNAL_TOPIC_HREF);
-
-      return match ? Number(match[1]) === topic.id : false;
-    });
+    return this.links.findIndex(
+      (link) => topicIdFromHref(link?.href) === this.topic.id
+    );
   }
 
   get shouldRender() {

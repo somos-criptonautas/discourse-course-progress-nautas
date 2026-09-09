@@ -1,0 +1,3 @@
+es:
+  site_settings:
+    course_progress_enabled: "Expone /course-progress.json y muestra la navegación Anterior/Siguiente en los temas de Doc Categories."

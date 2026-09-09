@@ -8,6 +8,8 @@ Server-side Discourse plugin that returns the **true historical read status** of
 
 - Renders **Previous / Next** links at the bottom of a topic (above the suggested topics), following the exact order of the category's configured Docs **Index Topic**.
 - Reads the ordered index the official **Doc Categories** plugin already serializes on the category (`doc_category_index`) — no extra API calls.
+- Works for topics in **subcategories** of the docs category, and for topics the index borrows from other readable categories (the index is looked up by walking up the category tree, then across the site's categories).
+- Matches both root-relative (`/t/slug/1`) and absolute (`https://host/t/slug/1`) links in the Index Topic.
 - Auto-hidden on topics outside the index (e.g. the Index Topic itself).
 - Glimmer component rendered in the `topic-above-suggested` outlet; styles scoped under `.course-doc-nav`, overridable from any theme.
 
@@ -56,8 +58,16 @@ This plugin only serves data. To display badges/checkmarks, also install the com
 }
 ```
 
-The Index Topic itself is **excluded** from `total_topics` — it is course
-navigation, not course content. A course of 10 lessons reports `total_topics: 10`.
+Totals come from the **Index Topic**, not from a raw category scan, so lessons
+in subcategories (or borrowed from another readable category) are counted and
+the numbers agree with the Previous / Next navigation. The Index Topic itself is
+**excluded** — it is navigation, not course content, so a course of 10 lessons
+reports `total_topics: 10`.
+
+Everything is scoped to the requesting user's permissions: restricted
+categories, deleted and unreadable topics never appear. If a course's Index
+Topic has never been parsed, the endpoint falls back to scanning the category
+directly (subcategories excluded) rather than reporting zero.
 
 ## Troubleshooting
 
@@ -68,6 +78,13 @@ re-assigned**. On a course that was configured before that mechanism existed,
 just re-save the Index Topic (edit it and Save, or re-pick it in the category's
 Docs settings).
 
-**A lesson is missing from the Previous / Next list.** Give its link in the
-Index Topic an explicit title — a link carrying only a topic id is skipped by
-the Doc Categories parser.
+**A lesson is missing from the Previous / Next list.** The Doc Categories
+parser only picks up links inside a `<ul>`/`<ol>` list item in the Index
+Topic's first post; anything else is ignored. Re-save the Index Topic after
+fixing it.
+
+## Tests
+
+```
+node test/topic-href.test.mjs
+```
