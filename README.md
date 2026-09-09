@@ -8,7 +8,7 @@ Server-side Discourse plugin that returns the **true historical read status** of
 
 - Renders **Previous / Next** links right after the last post, above the topic's reply/bookmark/share buttons, following the exact order of the category's configured Docs **Index Topic**.
 - Reads the ordered index the official **Doc Categories** plugin already serializes on the category (`doc_category_index`) — no extra API calls.
-- Works for topics in **subcategories** of the docs category, and for topics the index borrows from other readable categories (the index is looked up by walking up the category tree, then across the site's categories).
+- Scoped to the category that has the Index Topic. Its **subcategories are ordinary categories** — normal listing, no Previous / Next, no docs sidebar.
 - Matches both root-relative (`/t/slug/1`) and absolute (`https://host/t/slug/1`) links in the Index Topic.
 - Auto-hidden on topics outside the index (e.g. the Index Topic itself).
 - Glimmer component rendered in the `topic-above-footer-buttons` outlet; styles scoped under `.course-doc-nav`, overridable from any theme.
@@ -23,11 +23,9 @@ private `#findIndexForActiveCategory` method that does the walking cannot be
 patched, but the getter it reads can, so returning nothing for a category
 without its own `doc_category_index` ends the walk before it starts.
 
-Scope to be aware of: this hides the docs sidebar on subcategory listing pages
-**and on topics inside those subcategories**. If some of your lessons live in
-subcategories, those lesson pages lose the sidebar too — Previous / Next still
-works there, since it keys off the Index Topic rather than the category tree.
-Turn the whole behaviour off with the
+This applies to subcategory listing pages and to topics inside them, which is
+the intended behaviour: a subcategory of a docs category is an ordinary
+category and should look like one. Turn it off with the
 `course_progress_docs_sidebar_only_on_index_category` site setting.
 
 ## Why it exists
@@ -81,9 +79,9 @@ This plugin only serves data. To display badges/checkmarks, also install the com
 }
 ```
 
-Totals come from the **Index Topic**, not from a raw category scan, so lessons
-in subcategories (or borrowed from another readable category) are counted and
-the numbers agree with the Previous / Next navigation. The Index Topic itself is
+Totals come from the **Index Topic**, not from a raw category scan, so the
+numbers count exactly the lessons the index lists and agree with the
+Previous / Next navigation. The Index Topic itself is
 **excluded** — it is navigation, not course content, so a course of 10 lessons
 reports `total_topics: 10`.
 

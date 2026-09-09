@@ -27,22 +27,13 @@ export default class CourseDocNavigation extends Component {
     return this.args.outletArgs?.model;
   }
 
-  // The index lives on the category that has it configured, but the topics it
-  // lists can sit in a subcategory (or, per doc-categories, in any other
-  // category the user can read). So walk up from the topic's own category the
-  // way doc-categories does, then fall back to every category we know about.
-  get candidateCategories() {
-    const start =
+  // Only the category that has an Index Topic configured is a course; its
+  // subcategories are ordinary categories with ordinary listings.
+  get category() {
+    return (
       this.topic?.category ??
-      this.site.categories?.find((c) => c.id === this.topic?.category_id);
-
-    const chain = [];
-
-    for (let category = start; category; category = category.parentCategory) {
-      chain.push(category);
-    }
-
-    return chain.concat(this.site.categories ?? []);
+      this.site.categories?.find((c) => c.id === this.topic?.category_id)
+    );
   }
 
   @cached
@@ -53,21 +44,13 @@ export default class CourseDocNavigation extends Component {
       return [];
     }
 
-    for (const category of this.candidateCategories) {
-      const structure = category?.doc_category_index;
+    const structure = this.category?.doc_category_index;
 
-      if (!Array.isArray(structure)) {
-        continue;
-      }
-
-      const links = structure.flatMap((section) => section?.links ?? []);
-
-      if (links.some((link) => topicIdFromHref(link?.href) === topicId)) {
-        return links;
-      }
+    if (!Array.isArray(structure)) {
+      return [];
     }
 
-    return [];
+    return structure.flatMap((section) => section?.links ?? []);
   }
 
   @cached

@@ -26,8 +26,8 @@ class CourseProgressController < ::ApplicationController
     return render json: { courses: {} } if course_category_ids.empty?
 
     # 2. Which topics make up each course. The Index Topic is the source of
-    #    truth, so lessons living in subcategories (or borrowed from another
-    #    category) are counted, matching the Previous/Next navigation.
+    #    truth, so the count matches the Previous/Next navigation exactly,
+    #    wherever the listed lessons happen to live.
     topic_data = indexed_topic_data(course_category_ids) || []
 
     # A course whose Index Topic has never been parsed (or that predates the

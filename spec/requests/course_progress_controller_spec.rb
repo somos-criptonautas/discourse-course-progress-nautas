@@ -37,7 +37,7 @@ RSpec.describe CourseProgressController do
   context "when signed in" do
     before { sign_in(user) }
 
-    it "counts the lessons listed in the index, including ones in subcategories" do
+    it "counts exactly the lessons the index lists, wherever they live" do
       add_links(lesson, sub_lesson)
 
       get "/course-progress.json"
