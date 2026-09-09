@@ -8,11 +8,8 @@ enabled_site_setting :course_progress_enabled
 register_asset "stylesheets/common.scss"
 
 after_initialize do
-  # Load the controller
-  load File.expand_path('../app/controllers/course_progress_controller.rb', __FILE__)
-
-  # Create the custom route
+  # The controller in app/controllers is autoloaded by Discourse.
   Discourse::Application.routes.append do
-    get '/course-progress' => 'course_progress#index', constraints: { format: 'json' }
+    get "/course-progress" => "course_progress#index", :constraints => { format: "json" }
   end
 end

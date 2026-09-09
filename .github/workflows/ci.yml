@@ -6,22 +6,18 @@ on:
   pull_request:
 
 jobs:
-  test:
+  js:
+    name: JS unit tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-
       - uses: actions/setup-node@v5
         with:
           node-version: 22
+      - run: node test/topic-href.test.mjs
 
-      - name: JS unit tests
-        run: node test/topic-href.test.mjs
-
-      - name: Ruby syntax check
-        run: |
-          for f in plugin.rb app/controllers/*.rb; do ruby -c "$f"; done
-
-      - name: YAML syntax check
-        run: |
-          ruby -ryaml -e 'Dir["config/**/*.yml"].each { |f| YAML.load_file(f); puts f }'
+  plugin:
+    name: Discourse Plugin
+    uses: discourse/.github/.github/workflows/discourse-plugin.yml@v1
+    with:
+      name: discourse-course-progress

@@ -100,11 +100,18 @@ class CourseProgressController < ::ApplicationController
     SQL
   end
 
-  # Fallback for Doc Categories versions predating the sidebar tables: every
-  # topic sitting directly in the course category. Misses subcategories.
+  # Fallback for courses whose Index Topic has not been parsed: every topic
+  # sitting directly in the course category, minus the "About this category"
+  # definition topics. Misses subcategories.
   def category_topic_data(course_category_ids)
     return [] if course_category_ids.empty?
 
-    Topic.where(category_id: course_category_ids).pluck(:id, :category_id)
+    categories = Category.where(id: course_category_ids)
+    definition_topic_ids = categories.pluck(:topic_id).compact
+
+    Topic
+      .where(category_id: course_category_ids)
+      .where.not(id: definition_topic_ids)
+      .pluck(:id, :category_id)
   end
 end
