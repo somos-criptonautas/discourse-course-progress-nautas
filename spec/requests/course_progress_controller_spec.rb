@@ -2,7 +2,7 @@
 
 RSpec.describe CourseProgressController do
   fab!(:user)
-  fab!(:category) { Fabricate(:category_with_definition) }
+  fab!(:category, :category_with_definition)
   fab!(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
   fab!(:index_topic) { Fabricate(:topic_with_op, category: category) }
   fab!(:lesson) { Fabricate(:topic, category: category) }

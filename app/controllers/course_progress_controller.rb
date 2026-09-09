@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CourseProgressController < ::ApplicationController
+  requires_plugin "discourse-course-progress"
   requires_login # Only logged-in users have read histories
 
   INDEXES_TABLE = "doc_categories_indexes"
