@@ -42,6 +42,12 @@ hooks:
 
 This plugin only serves data. To display badges/checkmarks, also install the companion theme component: [discourse-course-progress-theme](https://github.com/zsviczian/discourse-course-progress-theme).
 
+> **Set the theme component's `non_course_files` setting to `0`.** It defaults
+> to `2` because upstream's `total_topics` counted the Index Topic and the
+> "About this category" topic as lessons. This fork excludes both server-side,
+> so leaving the setting at `2` deducts them twice — the count reaches
+> "complete" early and the `read / total` badge is replaced by a checkmark.
+
 ## API
 
 `GET /course-progress.json` — logged-in users only (guests have no read history).
