@@ -7,9 +7,9 @@ import { topicIdFromHref } from "../lib/topic-href";
 /**
  * Previous / next topic navigation for Doc Categories.
  *
- * Renders in the `topic-above-suggested` outlet (bottom of the topic, above
- * the suggested/more topics list) and follows the exact order of the
- * category's configured docs Index Topic.
+ * Renders in the `topic-above-footer-buttons` outlet (right below the last
+ * post, above the topic's reply/bookmark/share buttons) and follows the exact
+ * order of the category's configured docs Index Topic.
  *
  * The ordered structure is provided by the official discourse-doc-categories
  * plugin through the category serializer (`doc_category_index`), so no

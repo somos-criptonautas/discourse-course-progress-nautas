@@ -12,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.renderInOutlet("topic-above-suggested", CourseDocNavigation);
+      api.renderInOutlet("topic-above-footer-buttons", CourseDocNavigation);
     });
   },
 };

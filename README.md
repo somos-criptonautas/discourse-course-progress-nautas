@@ -6,12 +6,12 @@ Server-side Discourse plugin that returns the **true historical read status** of
 
 **Previous / Next topic navigation** for Doc Categories:
 
-- Renders **Previous / Next** links at the bottom of a topic (above the suggested topics), following the exact order of the category's configured Docs **Index Topic**.
+- Renders **Previous / Next** links right after the last post, above the topic's reply/bookmark/share buttons, following the exact order of the category's configured Docs **Index Topic**.
 - Reads the ordered index the official **Doc Categories** plugin already serializes on the category (`doc_category_index`) — no extra API calls.
 - Works for topics in **subcategories** of the docs category, and for topics the index borrows from other readable categories (the index is looked up by walking up the category tree, then across the site's categories).
 - Matches both root-relative (`/t/slug/1`) and absolute (`https://host/t/slug/1`) links in the Index Topic.
 - Auto-hidden on topics outside the index (e.g. the Index Topic itself).
-- Glimmer component rendered in the `topic-above-suggested` outlet; styles scoped under `.course-doc-nav`, overridable from any theme.
+- Glimmer component rendered in the `topic-above-footer-buttons` outlet; styles scoped under `.course-doc-nav`, overridable from any theme.
 
 ## Why it exists
 
