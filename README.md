@@ -31,8 +31,14 @@ category and should look like one. Turn it off with the
 
 ## Site settings
 
-All of this fork's behaviour is switchable from **Admin → Settings → Plugins**
-(these are plugin settings, not theme component settings):
+All of this fork's behaviour is switchable from **Admin → Plugins → Course
+Progress**, or from **Admin → Settings** by searching `course_progress`. These
+are plugin settings; the companion theme component's `non_course_files` lives
+separately under Admin → Customize → Components.
+
+(Discourse renders no admin page for a plugin whose only setting is its own
+enable toggle — see `Plugin::Instance#has_only_enabled_setting?`. This fork has
+three, so the page shows.)
 
 | Setting | Default | What it does |
 | --- | --- | --- |
