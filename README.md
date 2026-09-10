@@ -6,13 +6,13 @@ Server-side Discourse plugin that returns the **true historical read status** of
 
 **Previous / Next topic navigation** for Doc Categories:
 
-- Renders **Previous / Next** links at the end of the post stream (`topic-area-bottom`), styled as a pair of cards so they read as course navigation rather than as part of the suggested-topics list below.
+- Renders **Previous / Next** links at the end of the lesson post, **before any replies** — in both the flat post stream and the nested-replies view — styled as a pair of cards so they read as course navigation rather than as part of the suggested-topics list.
 - Reads the ordered index the official **Doc Categories** plugin already serializes on the category (`doc_category_index`) — no extra API calls.
 - Scoped to the category that has the Index Topic. Its **subcategories are ordinary categories** — normal listing, no Previous / Next, no docs sidebar.
 - Matches both root-relative (`/t/slug/1`) and absolute (`https://host/t/slug/1`) links in the Index Topic.
 - Auto-hidden on topics outside the index (e.g. the Index Topic itself).
 - Labels are localised (`en`, `es`) and carry `arrow-left` / `arrow-right` icons, which the [Phosphor duotone](https://github.com/somos-criptonautas/discourse-phosphor-duotone-icons) component swaps for its own arrows automatically.
-- Glimmer component; styles scoped under `.course-doc-nav`, overridable from any theme.
+- Glimmer component registered with `renderAfterWrapperOutlet("post-links")` and shown only on post #1; styles scoped under `.course-doc-nav`, overridable from any theme. Visible to anonymous visitors too.
 
 **Docs sidebar scoping.** Doc Categories resolves a category's index by walking
 up the category tree, so every subcategory of a docs category inherits its

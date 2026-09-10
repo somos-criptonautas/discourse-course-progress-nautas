@@ -1,5 +1,5 @@
 // Previous / next topic navigation for Doc Categories, rendered by
-// discourse-course-progress in the "topic-area-bottom" outlet.
+// discourse-course-progress after the first post's "post-links" outlet.
 //
 // Styled as a pair of cards so it reads as course navigation rather than as
 // part of the plain link list in the suggested-topics block below it.
@@ -7,7 +7,7 @@
   display: flex;
   align-items: stretch;
   gap: 1em;
-  margin: 1.5em 0 0.5em;
+  margin: 2em 0 2.5em;
 
   &__link {
     display: flex;

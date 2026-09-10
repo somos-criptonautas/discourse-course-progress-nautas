@@ -15,7 +15,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.renderInOutlet("topic-area-bottom", CourseDocNavigation);
+      api.renderAfterWrapperOutlet("post-links", CourseDocNavigation);
     });
   },
 };

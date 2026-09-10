@@ -8,9 +8,10 @@ import { topicIdFromHref } from "../lib/topic-href";
 /**
  * Previous / next topic navigation for Doc Categories.
  *
- * Renders in the `topic-area-bottom` outlet, at the end of the post stream and
- * before the topic's footer buttons, following the exact order of the
- * category's configured docs Index Topic.
+ * Renders after the `post-links` wrapper outlet of the first post, so it sits
+ * at the end of the lesson and before any replies. Both the flat post stream
+ * and the nested-replies view render that outlet on the original post. Links
+ * follow the exact order of the category's configured docs Index Topic.
  *
  * The ordered structure is provided by the official discourse-doc-categories
  * plugin through the category serializer (`doc_category_index`), so no
@@ -24,8 +25,12 @@ import { topicIdFromHref } from "../lib/topic-href";
 export default class CourseDocNavigation extends Component {
   @service site;
 
+  get post() {
+    return this.args.outletArgs?.post;
+  }
+
   get topic() {
-    return this.args.outletArgs?.model;
+    return this.post?.topic;
   }
 
   // Only the category that has an Index Topic configured is a course; its
@@ -41,7 +46,8 @@ export default class CourseDocNavigation extends Component {
   get links() {
     const topicId = this.topic?.id;
 
-    if (!topicId || this.topic.isPrivateMessage) {
+    // The outlet renders on every post; only the lesson post gets the nav.
+    if (this.post?.post_number !== 1 || !topicId || this.topic.isPrivateMessage) {
       return [];
     }
 
