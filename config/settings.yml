@@ -8,3 +8,6 @@ plugins:
   course_progress_docs_sidebar_only_on_index_category:
     default: true
     client: true
+  course_progress_sidebar_markers_enabled:
+    default: true
+    client: true

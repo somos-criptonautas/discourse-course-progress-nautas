@@ -7,3 +7,12 @@ export function topicIdFromHref(href) {
 
   return match ? Number(match[1]) : null;
 }
+
+// Sidebar category links keep the id last: "/c/cursos/15", "/c/cursos/btc/15".
+const CATEGORY_HREF = /^(?:https?:\/\/[^/]+)?\/c\/(?:[^/?#]+\/)*(\d+)(?:[/?#]|$)/;
+
+export function categoryIdFromHref(href) {
+  const match = href?.match(CATEGORY_HREF);
+
+  return match ? Number(match[1]) : null;
+}

@@ -58,3 +58,25 @@
     text-align: right;
   }
 }
+
+// Sidebar progress markers. Core's badge slot already handles placement and
+// ellipsis, so only the marker itself is styled here: a muted read/total count
+// while a course is in progress, a small dot once it is finished (and on every
+// lesson already read in the docs sidebar).
+.course-progress-badge {
+  color: var(--primary-medium);
+  font-size: var(--font-down-3);
+  font-variant-numeric: tabular-nums;
+
+  &.--done {
+    align-self: center;
+    box-sizing: content-box;
+    width: 0.375em;
+    height: 0.375em;
+    min-width: 0;
+    padding: 0;
+    border-radius: 50%;
+    background: var(--success);
+    opacity: 0.85;
+  }
+}

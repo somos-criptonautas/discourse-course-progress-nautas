@@ -7,7 +7,7 @@ const src = await readFile(
   new URL("../assets/javascripts/discourse/lib/topic-href.js", import.meta.url),
   "utf8"
 );
-const { topicIdFromHref } = await import(
+const { topicIdFromHref, categoryIdFromHref } = await import(
   "data:text/javascript," + encodeURIComponent(src)
 );
 
@@ -19,5 +19,14 @@ assert.equal(topicIdFromHref("http://foro.example.com/t/42"), 42);
 assert.equal(topicIdFromHref("/c/cursos/5"), null);
 assert.equal(topicIdFromHref("https://example.com/blog/t/42"), null);
 assert.equal(topicIdFromHref(undefined), null);
+
+assert.equal(categoryIdFromHref("/c/cursos/15"), 15);
+assert.equal(categoryIdFromHref("/c/cursos/bitcoin/15"), 15);
+assert.equal(categoryIdFromHref("/c/cursos/15?tag=foo"), 15);
+assert.equal(categoryIdFromHref("https://foro.example.com/c/cursos/15"), 15);
+assert.equal(categoryIdFromHref("/c/cursos/15/l/latest"), 15);
+assert.equal(categoryIdFromHref("/t/como-empezar/42"), null);
+assert.equal(categoryIdFromHref("/categories"), null);
+assert.equal(categoryIdFromHref(undefined), null);
 
 console.log("ok");
