@@ -6,7 +6,8 @@ const MARKER = "course-progress-badge";
 
 // Core renders the badge slot itself (.sidebar-section-link-content-badge is
 // pushed right and ellipsized), so reusing its class keeps the row layout,
-// hover and active states untouched. An empty marker is drawn as a dot.
+// hover and active states untouched. A marker with no text means finished, and
+// is drawn as a check: a dot there would read as Discourse's unread indicator.
 function marker(text) {
   const span = document.createElement("span");
 
@@ -16,6 +17,9 @@ function marker(text) {
     span.textContent = text;
   } else {
     span.classList.add("--done");
+    span.innerHTML =
+      `<svg class="fa d-icon d-icon-check svg-icon" aria-hidden="true">` +
+      `<use href="#check"></use></svg>`;
   }
 
   return span;

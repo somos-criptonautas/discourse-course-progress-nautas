@@ -12,6 +12,7 @@ register_asset "stylesheets/common.scss"
 # Swapped for Phosphor duotone equivalents when that theme component is active.
 register_svg_icon "arrow-left"
 register_svg_icon "arrow-right"
+register_svg_icon "check"
 
 after_initialize do
   # Plugins without a Rails::Engine get no autoload path for app/, so the

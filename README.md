@@ -91,9 +91,12 @@ is no longer needed and must be uninstalled**, or both sets of markers render
 side by side.
 
 - **Course categories in the main sidebar** get a muted `read/total` count, and
-  a small dot once every lesson is read.
-- **Lessons in the Docs sidebar** get the same dot once read, and nothing
+  a check once every lesson is read.
+- **Lessons in the Docs sidebar** get the same check once read, and nothing
   before that.
+
+A check rather than a dot: a coloured dot on a sidebar row already means unread
+content in Discourse, so reusing it for the opposite state reads wrong.
 
 The markers use core's own badge slot (`.sidebar-section-link-content-badge`),
 which core already pushes to the end of the row and ellipsizes, so the row
