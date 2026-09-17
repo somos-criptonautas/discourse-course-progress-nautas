@@ -36,8 +36,15 @@ category and should look like one. Turn it off with the
 ## Site settings
 
 All of this fork's behaviour is switchable from **Admin → Plugins → Course
-Progress**, or from **Admin → Settings** by searching `course_progress`. These
-are plugin settings, not theme settings.
+Progress Nautas**, or from **Admin → Settings** by searching `course_progress`.
+These are plugin settings, not theme settings.
+
+The plugin's `# name:` in `plugin.rb` is `discourse-course-progress-nautas` and
+has to keep matching the directory it is cloned into. Core reads settings out of
+`plugins/<directory>/config/settings.yml` and files them under the directory
+name, while the admin page looks them up by the plugin's declared name; when the
+two differ the settings still work but the plugin's admin page lists none of
+them.
 
 (Discourse renders no admin page for a plugin whose only setting is its own
 enable toggle — see `Plugin::Instance#has_only_enabled_setting?`. This fork has

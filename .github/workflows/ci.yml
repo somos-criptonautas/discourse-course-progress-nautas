@@ -20,4 +20,4 @@ jobs:
     name: Discourse Plugin
     uses: discourse/.github/.github/workflows/discourse-plugin.yml@v1
     with:
-      name: discourse-course-progress
+      name: discourse-course-progress-nautas
