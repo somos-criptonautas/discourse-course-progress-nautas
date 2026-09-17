@@ -41,7 +41,7 @@ are plugin settings, not theme settings.
 
 (Discourse renders no admin page for a plugin whose only setting is its own
 enable toggle — see `Plugin::Instance#has_only_enabled_setting?`. This fork has
-four, so the page shows.)
+five, so the page shows.)
 
 | Setting | Default | What it does |
 | --- | --- | --- |
@@ -49,6 +49,7 @@ four, so the page shows.)
 | `course_progress_doc_navigation_enabled` | on | The Previous / Next links. |
 | `course_progress_docs_sidebar_only_on_index_category` | on | Stops subcategories inheriting the docs sidebar. |
 | `course_progress_sidebar_markers_enabled` | on | The sidebar read/total counts and read dots. |
+| `course_progress_non_course_topics` | 0 | Topics to discount from the sidebar count (see *Progress UI*). |
 
 ## Why it exists
 
@@ -91,10 +92,14 @@ The markers use core's own badge slot (`.sidebar-section-link-content-badge`),
 which core already pushes to the end of the row and ellipsizes, so the row
 keeps core's hover and active styling untouched. The theme component instead
 forced `display: flex` / `width: 100%` / `padding-right` onto the link, which
-pulled the highlight out of line with the neighbouring rows. Its
-`non_course_files` setting is gone too: this fork already excludes the Index
-Topic and the "About this category" topic server-side, so nothing needs
-deducting.
+pulled the highlight out of line with the neighbouring rows.
+
+The theme's `non_course_files` knob lives on as
+`course_progress_non_course_topics`, but it now defaults to **0**: this fork
+already excludes the Index Topic and the "About this category" topic
+server-side. Raise it only when an index lists topics that are not lessons — a
+welcome post, an FAQ — and the count should ignore them. It affects the sidebar
+count alone; `/course-progress.json` keeps reporting the real total.
 
 Turn the markers off with `course_progress_sidebar_markers_enabled`. Styles are
 scoped under `.course-progress-badge` and overridable from any theme.

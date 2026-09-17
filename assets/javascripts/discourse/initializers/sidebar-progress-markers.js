@@ -29,7 +29,7 @@ function replaceMarker(link, text) {
   }
 }
 
-function decorate(courses) {
+function decorate(courses, nonCourseTopics) {
   const read = new Set();
 
   for (const course of Object.values(courses)) {
@@ -40,15 +40,21 @@ function decorate(courses) {
   document.querySelectorAll("a.sidebar-section-link").forEach((link) => {
     const course = courses[categoryIdFromHref(link.getAttribute("href"))];
 
-    if (!course || course.total_topics === 0) {
+    if (!course) {
+      return;
+    }
+
+    // Courses whose index lists topics that are not lessons (a welcome post, a
+    // FAQ) can discount them here; the endpoint keeps reporting the real total.
+    const total = Math.max(0, course.total_topics - nonCourseTopics);
+
+    if (total === 0) {
       return;
     }
 
     replaceMarker(
       link,
-      course.read_count >= course.total_topics
-        ? null
-        : `${course.read_count}/${course.total_topics}`
+      course.read_count >= total ? null : `${course.read_count}/${total}`
     );
   });
 
@@ -82,7 +88,12 @@ export default {
       // is re-read per navigation rather than cached.
       api.onPageChange(() => {
         ajax("/course-progress.json")
-          .then((data) => decorate(data?.courses ?? {}))
+          .then((data) =>
+            decorate(
+              data?.courses ?? {},
+              siteSettings.course_progress_non_course_topics
+            )
+          )
           .catch(() => {});
       });
     });

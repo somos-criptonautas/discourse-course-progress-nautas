@@ -11,3 +11,7 @@ plugins:
   course_progress_sidebar_markers_enabled:
     default: true
     client: true
+  course_progress_non_course_topics:
+    default: 0
+    min: 0
+    client: true

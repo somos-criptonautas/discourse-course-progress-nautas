@@ -4,3 +4,4 @@ es:
     course_progress_doc_navigation_enabled: "Muestra enlaces Anterior/Siguiente al final de los mensajes en los temas listados en un Tema Índice de Docs."
     course_progress_docs_sidebar_only_on_index_category: "Muestra la barra lateral de Doc Categories solo en la categoría que tiene un Tema Índice configurado, no en sus subcategorías."
     course_progress_sidebar_markers_enabled: "Muestra el progreso leídos/total junto a las categorías de curso en la barra lateral, y un punto en las lecciones ya leídas en la barra de Docs."
+    course_progress_non_course_topics: "Resta esta cantidad de temas del contador leídos/total de la barra lateral, para índices que listan temas que no son lecciones. No cambia /course-progress.json."
