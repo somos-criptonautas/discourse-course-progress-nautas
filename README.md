@@ -131,13 +131,23 @@ categories, deleted and unreadable topics never appear. If a course's Index
 Topic has never been parsed, the endpoint falls back to scanning the category
 directly (subcategories excluded) rather than reporting zero.
 
-## Completion badges
+## Completion badges (optional)
 
-No plugin code: core's custom SQL badges can both grant and revoke from the
-same tables the endpoint reads. Enable the hidden setting first
-(`rails runner 'SiteSetting.enable_badge_sql = true'`), then create a badge per
-course per milestone with the trigger set to **update daily**, changing
-`i.category_id` and the final threshold:
+Nothing here is required by the plugin, and none of it is plugin code: it is a
+recipe for Discourse core's custom SQL badges, which can read the same Doc
+Categories tables the endpoint reads and both grant and revoke on their own.
+Sites that do not want completion badges can skip this section entirely.
+
+SQL badges are behind a hidden site setting, enabled from the Rails console:
+
+```
+SiteSetting.enable_badge_sql = true
+```
+
+Then one badge per course per milestone, with the trigger set to **update
+daily**. `i.category_id` selects the course and the final threshold selects the
+milestone — `1.0` for full completion, `0.30` / `0.50` / `0.70` for partial
+progress:
 
 ```sql
 WITH lessons AS (
@@ -164,15 +174,25 @@ FROM progress
 WHERE ratio >= 0.30
 ```
 
-Badges stack: a user holds every milestone reached. To keep only the highest
-visible, bound the lower ones (`ratio >= 0.30 AND ratio < 0.50`).
+The query follows the same definition of a lesson as the endpoint: the topics
+the Index Topic lists, minus the Index Topic itself and deleted topics.
 
-**Auto revoke** is on by default, so adding a lesson to an index lowers
-everyone's ratio and the next daily run takes the badge back. Turn it off per
-badge unless that is what you want.
+Notes worth knowing before rolling this out:
 
-To send a PM on a grant, use core's Automation plugin: trigger **User badge
-granted** (tick *only first grant*) with the **Send PMs** script.
+- **Milestones stack.** A member keeps every milestone reached, since Discourse
+  has no mutual exclusion between badges. Bounding the lower queries
+  (`ratio >= 0.30 AND ratio < 0.50`) shows only the highest, at the cost of
+  badges disappearing as members progress.
+- **Auto revoke is on by default.** Adding a lesson to an index lowers every
+  member's ratio, and the next daily run takes the badge back until they read
+  it. Sites that treat completion as permanent should turn Auto revoke off per
+  badge.
+- **Grants are daily.** Core fires no event when a topic is read, so the delay
+  between finishing a course and receiving the badge is up to one run of the
+  daily backfill job.
+- **PMs on grant** are a job for core's Automation plugin: the **User badge
+  granted** trigger (with *only first grant* ticked, so a revoke and re-grant
+  stays quiet) paired with the **Send PMs** script.
 
 ## Troubleshooting
 
