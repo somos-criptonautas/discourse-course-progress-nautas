@@ -5,3 +5,7 @@ es:
         label: "Navegación del curso"
         previous: "Anterior"
         next: "Siguiente"
+      sidebar:
+        progress: "%{read} de %{total} lecciones leídas"
+        completed: "Curso completado"
+        lesson_read: "Lección leída"

@@ -111,6 +111,9 @@ server-side. Raise it only when an index lists topics that are not lessons — a
 welcome post, an FAQ — and the count should ignore them. It affects the sidebar
 count alone; `/course-progress.json` keeps reporting the real total.
 
+Every marker carries a localised `title` (`en`, `es`), so the count and the
+check are readable on hover and to screen readers.
+
 Turn the markers off with `course_progress_sidebar_markers_enabled`. Styles are
 scoped under `.course-progress-badge` and overridable from any theme.
 

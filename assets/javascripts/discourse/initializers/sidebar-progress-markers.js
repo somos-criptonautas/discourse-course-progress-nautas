@@ -1,5 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { i18n } from "discourse-i18n";
 import { categoryIdFromHref, topicIdFromHref } from "../lib/topic-href";
 
 const MARKER = "course-progress-badge";
@@ -8,10 +9,11 @@ const MARKER = "course-progress-badge";
 // pushed right and ellipsized), so reusing its class keeps the row layout,
 // hover and active states untouched. A marker with no text means finished, and
 // is drawn as a check: a dot there would read as Discourse's unread indicator.
-function marker(text) {
+function marker(text, title) {
   const span = document.createElement("span");
 
   span.className = `sidebar-section-link-content-badge ${MARKER}`;
+  span.title = title;
 
   if (text) {
     span.textContent = text;
@@ -25,11 +27,11 @@ function marker(text) {
   return span;
 }
 
-function replaceMarker(link, text) {
+function replaceMarker(link, text, title) {
   link.querySelector(`.${MARKER}`)?.remove();
 
-  if (text !== false) {
-    link.appendChild(marker(text));
+  if (title) {
+    link.appendChild(marker(text, title));
   }
 }
 
@@ -56,9 +58,17 @@ function decorate(courses, nonCourseTopics) {
       return;
     }
 
+    const done = course.read_count >= total;
+
     replaceMarker(
       link,
-      course.read_count >= total ? null : `${course.read_count}/${total}`
+      done ? null : `${course.read_count}/${total}`,
+      done
+        ? i18n("course_progress.sidebar.completed")
+        : i18n("course_progress.sidebar.progress", {
+            read: course.read_count,
+            total,
+          })
     );
   });
 
@@ -66,7 +76,13 @@ function decorate(courses, nonCourseTopics) {
   document.querySelectorAll("a.docs-sidebar-nav-link").forEach((link) => {
     const topicId = topicIdFromHref(link.getAttribute("href"));
 
-    replaceMarker(link, topicId && read.has(topicId) ? null : false);
+    replaceMarker(
+      link,
+      null,
+      topicId && read.has(topicId)
+        ? i18n("course_progress.sidebar.lesson_read")
+        : null
+    );
   });
 }
 
