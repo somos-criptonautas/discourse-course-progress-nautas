@@ -3,7 +3,7 @@ import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { topicIdFromHref } from "../lib/topic-href";
+import { docCategoryForTopic, topicIdFromHref } from "../lib/topic-href";
 
 /**
  * Previous / next topic navigation for Doc Categories.
@@ -33,13 +33,15 @@ export default class CourseDocNavigation extends Component {
     return this.post?.topic;
   }
 
-  // Only the category that has an Index Topic configured is a course; its
-  // subcategories are ordinary categories with ordinary listings.
+  // Membership comes from the index, not from where the topic lives: a topic
+  // listed in some category's Index Topic is part of that course even when it
+  // sits in another category. Its own category wins when it is a doc category.
   get category() {
-    return (
+    const own =
       this.topic?.category ??
-      this.site.categories?.find((c) => c.id === this.topic?.category_id)
-    );
+      this.site.categories?.find((c) => c.id === this.topic?.category_id);
+
+    return docCategoryForTopic(this.site.categories, this.topic?.id, own);
   }
 
   @cached
