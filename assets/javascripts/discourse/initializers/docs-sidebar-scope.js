@@ -3,6 +3,11 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 export default {
   name: "course-docs-sidebar-scope",
 
+  // Doc Categories looks the service up on the first line of its own
+  // initializer, which instantiates it. Patching a class after that has no
+  // effect, so this has to run first.
+  before: "doc-categories",
+
   initialize(container) {
     const siteSettings = container.lookup("service:site-settings");
 

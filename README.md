@@ -23,6 +23,10 @@ up the category tree, so every subcategory of a docs category inherits its
 sidebar. This fork stops that walk: the sidebar appears only in the category
 that actually has an Index Topic configured.
 
+The initializer declares `before: "doc-categories"`, because Doc Categories
+instantiates the sidebar service on the first line of its own initializer and a
+class patched after that point is ignored (Discourse logs a warning saying so).
+
 It works by overriding the sidebar service's `activeCategory` getter — the
 private `#findIndexForActiveCategory` method that does the walking cannot be
 patched, but the getter it reads can, so returning nothing for a category
