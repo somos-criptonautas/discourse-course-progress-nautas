@@ -1,5 +1,7 @@
 # Discourse Course Progress — Criptonautas Fork
 
+**ENGLISH** | [ESPAÑOL](README.es.md)
+
 Server-side Discourse plugin that returns the **true historical read status** of topics per user, for LMS-style course progression. Fork of [zsviczian/discourse-course-progress](https://github.com/zsviczian/discourse-course-progress) (MIT).
 
 ## What this fork adds
@@ -230,3 +232,9 @@ fixing it.
 ```
 node test/topic-href.test.mjs
 ```
+
+## License
+
+MIT (upstream: zsviczian). Modifications © 2026 Criptonautas. See [LICENSE](LICENSE).
+
+Text of this README under [CC BY-NC-SA 4.0](CC-BY-NC-SA-4.0.txt).
