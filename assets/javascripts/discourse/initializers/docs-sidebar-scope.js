@@ -1,12 +1,41 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
+// Upstream resolves a category's index by walking up the category tree, so
+// every subcategory of a docs category inherits its sidebar. Narrowing
+// `activeCategory` to categories that carry their own index ends that walk
+// before it starts: `#findIndexForActiveCategory` then returns nothing and the
+// service hides the sidebar by itself.
+//
+// The narrowing is installed on the service *instance*, not through
+// modifyClass: Doc Categories looks the service up on the first line of its own
+// initializer, and a class modified after instantiation is ignored (Discourse
+// logs "it was already initialized earlier in the boot process" and moves on).
+// An own property shadows the prototype getter whenever it is defined.
+function scopeToIndexCategory(service) {
+  let descriptor;
+  let proto = Object.getPrototypeOf(service);
+
+  while (proto && !descriptor) {
+    descriptor = Object.getOwnPropertyDescriptor(proto, "activeCategory");
+    proto = Object.getPrototypeOf(proto);
+  }
+
+  if (!descriptor?.get) {
+    return;
+  }
+
+  const activeCategory = descriptor.get;
+
+  Object.defineProperty(service, "activeCategory", {
+    configurable: true,
+    get() {
+      const category = activeCategory.call(this);
+
+      return category?.doc_category_index ? category : undefined;
+    },
+  });
+}
 
 export default {
   name: "course-docs-sidebar-scope",
-
-  // Doc Categories looks the service up on the first line of its own
-  // initializer, which instantiates it. Patching a class after that has no
-  // effect, so this has to run first.
-  before: "doc-categories",
 
   initialize(container) {
     const siteSettings = container.lookup("service:site-settings");
@@ -23,22 +52,6 @@ export default {
       return;
     }
 
-    withPluginApi((api) => {
-      api.modifyClass(
-        "service:doc-category-sidebar",
-        (Superclass) =>
-          class extends Superclass {
-            // Upstream resolves the index by walking up the category tree, so
-            // every subcategory of a docs category inherits its sidebar.
-            // Returning nothing for those categories stops the walk before it
-            // starts, leaving the sidebar only where an index is configured.
-            get activeCategory() {
-              const category = super.activeCategory;
-
-              return category?.doc_category_index ? category : undefined;
-            }
-          }
-      );
-    });
+    scopeToIndexCategory(container.lookup("service:doc-category-sidebar"));
   },
 };

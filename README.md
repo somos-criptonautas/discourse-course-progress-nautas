@@ -17,7 +17,7 @@ Server-side Discourse plugin that returns the **true historical read status** of
 - Glimmer component registered with `renderAfterWrapperOutlet("post-links")` and shown only on post #1; styles scoped under `.course-doc-nav`, overridable from any theme. Visible to anonymous visitors too.
 
 **Sidebar progress markers.** A muted `read/total` count next to course
-categories in the main sidebar, and a dot on every lesson already read in the
+categories in the main sidebar, and a check on every lesson already read in the
 Docs sidebar — replacing the companion theme component (see *Progress UI*).
 
 **Docs sidebar scoping.** Doc Categories resolves a category's index by walking
@@ -25,9 +25,13 @@ up the category tree, so every subcategory of a docs category inherits its
 sidebar. This fork stops that walk: the sidebar appears only in the category
 that actually has an Index Topic configured.
 
-The initializer declares `before: "doc-categories"`, because Doc Categories
-instantiates the sidebar service on the first line of its own initializer and a
-class patched after that point is ignored (Discourse logs a warning saying so).
+The narrowing is installed on the sidebar service **instance**, not through
+`modifyClass`. Doc Categories looks that service up on the first line of its own
+initializer, so by the time a plugin's `modifyClass` runs the instance often
+already exists, and Discourse skips the modification with "it was already
+initialized earlier in the boot process". Declaring `before: "doc-categories"`
+is not reliable enough either; defining an own property on the instance shadows
+the prototype getter whenever it happens.
 
 It works by overriding the sidebar service's `activeCategory` getter — the
 private `#findIndexForActiveCategory` method that does the walking cannot be

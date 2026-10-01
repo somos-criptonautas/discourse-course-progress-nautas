@@ -17,17 +17,20 @@ Plugin de Discourse del lado del servidor que devuelve el **estado de lectura hi
 - Componente Glimmer registrado con `renderAfterWrapperOutlet("post-links")` y mostrado solo en el post #1; estilos acotados bajo `.course-doc-nav`, sobrescribibles desde cualquier tema. También visible para visitantes anónimos.
 
 **Marcadores de progreso en la barra lateral.** Un contador atenuado `leídos/total` junto a las categorías
-de curso en la barra lateral principal, y un punto en cada lección ya leída en la barra
-lateral de Docs, en sustitución del componente de tema complementario (ver *Interfaz de progreso*).
+de curso en la barra lateral principal, y una marca de verificación en cada lección ya leída en la
+barra lateral de Docs, en sustitución del componente de tema complementario (ver *Interfaz de progreso*).
 
 **Alcance de la barra lateral de Docs.** Doc Categories resuelve el índice de una categoría recorriendo
 el árbol de categorías hacia arriba, así que toda subcategoría de una categoría de docs hereda su
 barra lateral. Este fork detiene ese recorrido: la barra lateral aparece solo en la categoría
 que realmente tiene configurado un Index Topic.
 
-Funciona declarando `before: "doc-categories"` en el inicializador, porque Doc Categories
-instancia el servicio de la barra lateral en la primera línea de su propio inicializador y una
-clase parcheada después de ese punto se ignora (Discourse registra una advertencia indicándolo).
+El acotado se instala sobre la **instancia** del servicio, no con `modifyClass`. Doc Categories
+busca ese servicio en la primera línea de su propio inicializador, así que cuando corre el
+`modifyClass` de un plugin la instancia suele existir ya y Discourse descarta la modificación con
+«it was already initialized earlier in the boot process». Declarar `before: "doc-categories"`
+tampoco es suficientemente fiable; definir una propiedad propia sobre la instancia sombrea el
+getter del prototipo en cualquier momento.
 
 Se implementa sobrescribiendo el getter `activeCategory` del servicio de la barra lateral: el método privado
 `#findIndexForActiveCategory` que hace el recorrido no se puede parchear, pero el getter que lee sí,
