@@ -2,6 +2,8 @@
 
 [ENGLISH](README.md) | **ESPAÑOL**
 
+Mantenido por Criptonautas. Sin afiliación ni respaldo de Discourse (Civilized Discourse Construction Kit, Inc.).
+
 Plugin de Discourse del lado del servidor que devuelve el **estado de lectura histórico real** de los temas por usuario, para la progresión de cursos tipo LMS. Fork de [zsviczian/discourse-course-progress](https://github.com/zsviczian/discourse-course-progress) (MIT).
 
 ## Qué añade este fork
