@@ -4,6 +4,7 @@
 # about: Returns true historical read progress for Doc Categories with configured index topics. Adds `/course-progress.json` for LMS-style course progress tracking, Previous/Next lesson navigation and sidebar progress markers. Builds on the Discourse Doc Categories plugin.
 # version: 0.1
 # authors: zsviczian — Forked by Criptonautas
+# url: https://github.com/somos-criptonautas/discourse-course-progress-nautas
 
 enabled_site_setting :course_progress_enabled
 
